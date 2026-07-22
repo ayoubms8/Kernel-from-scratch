@@ -1,0 +1,14 @@
+# Compiled object files
+*.o
+obj/
+
+# Executables / Binaries
+*.bin
+*.elf
+
+# Disk images
+*.iso
+*.img
+
+# ISO staging directory
+isodir/
