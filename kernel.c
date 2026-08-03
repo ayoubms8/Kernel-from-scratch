@@ -16,10 +16,8 @@
 
 void kernel_main(void)
 {
-	/* Initialize terminal interface */
 	terminal_initialize();
 
-	/* Newline support is left as an exercise. */
 	terminal_writestring("42\n");
     
     printf("Testing printf: Hello %s! Number: %d, Hex: 0x%x, Char: %c\n", "World", -42, 3735928559, 'A');

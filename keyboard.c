@@ -14,7 +14,6 @@ const char scancode_to_ascii[128] = {
 };
 
 void keyboard_poll(void) {
-    // Read the PS/2 status register
     uint8_t status = inb(0x64);
     
     // Check if the output buffer bit (bit 0) is set
@@ -25,9 +24,13 @@ void keyboard_poll(void) {
         // The highest bit (bit 7) is set for key releases (break codes).
         // We only want to print on key presses (make codes), so we ensure bit 7 is 0.
         if (!(scancode & 0x80)) {
-            char c = scancode_to_ascii[scancode];
-            if (c != 0) {
-                terminal_putchar(c);
+            if (scancode >= 0x3B && scancode <= 0x3E) { // F1 to F4
+                terminal_switch(scancode - 0x3B);
+            } else {
+                char c = scancode_to_ascii[scancode];
+                if (c != 0) {
+                    terminal_putchar(c);
+                }
             }
         }
     }
