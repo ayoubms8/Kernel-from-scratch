@@ -1,7 +1,6 @@
 #include "string.h"
-#include <stdint.h>
 
-size_t strlen(const char* str) 
+size_t ft_strlen(const char* str) 
 {
 	size_t len = 0;
 	while (str[len])
@@ -9,15 +8,25 @@ size_t strlen(const char* str)
 	return len;
 }
 
-int strcmp(const char *s1, const char *s2) {
+int ft_strcmp(const char *s1, const char *s2) {
     while (*s1 && (*s1 == *s2)) {
         s1++;
         s2++;
     }
     return *(const unsigned char*)s1 - *(const unsigned char*)s2;
 }
+#include "stdio.h"
+int ft_strncmp(const char *s1, const char *s2, size_t size) {
+    int i = 0;
+    while (s1[i] && (s1[i] == s2[i]) && i < size) {
+        s1++;
+        s2++;
+        i++;
+    }
+    return *(const unsigned char*)s1 - *(const unsigned char*)s2;
+}
 
-void *memmove(void *dest, const void *src, size_t n) {
+void *ft_memmove(void *dest, const void *src, size_t n) {
     uint8_t *pdest = (uint8_t *)dest;
     const uint8_t *psrc = (const uint8_t *)src;
     
