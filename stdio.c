@@ -28,7 +28,7 @@ static int print_dec(int value) {
     return written;
 }
 
-static int print_hex(unsigned int value) {
+int print_hex(unsigned int value) {
     int written = 0;
     if (value == 0) {
         terminal_putchar('0');
@@ -59,12 +59,12 @@ static int vprintf(const char* format, va_list args) {
                 int value = va_arg(args, int);
                 written += print_dec(value);
             } else if (*format == 'x') {
-                unsigned int value = va_arg(args, unsigned int);
+                unsigned int value = va_arg(args, unsigned long long);
                 written += print_hex(value);
             } else if (*format == 's') {
                 const char* s = va_arg(args, const char*);
                 if (!s) s = "(null)";
-                size_t len = strlen(s);
+                size_t len = ft_strlen(s);
                 terminal_writestring(s);
                 written += len;
             } else if (*format == 'c') {
@@ -102,5 +102,13 @@ int printk(const char* format, ...) {
     terminal_writestring("[KERNEL] ");
     int ret = vprintf(format, args);
     va_end(args);
-    return ret + 9; // +9 for "[KERNEL] "
+    return ret + 9;
+}
+
+void echo(const char *str) {
+    if (str) {
+        terminal_putchar('\n');
+        terminal_writestring(str);
+        terminal_putchar('\n');
+    }
 }
