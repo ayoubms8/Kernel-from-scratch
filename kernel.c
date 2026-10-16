@@ -1,29 +1,33 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
 #include "terminal.h"
 #include "keyboard.h"
 #include "stdio.h"
+#include "gdt.h"
+#include "idt.h"
+#include "signal_panic.h"
+#include "multiboot.h"
 
-#if defined(__linux__)
-#error "standard compiler detected, use cross-compiler (i686-elf-gcc)"
-#endif
+struct multiboot_info *mbi = 0;
 
-#if !defined(__i386__)
-#error "a ix86-elf compiler not found"
-#endif
-
-void kernel_main(void)
+void kernel_main(uint32_t magic, uint32_t addr)
 {
+  if (magic == MULTIBOOT_BOOTLOADER_MAGIC) {
+      mbi = (struct multiboot_info *)addr;
+  }
+
+  gdt_init();
+  idt_init();
+  signal_init();
 	terminal_initialize();
-
+  
 	terminal_writestring("42\n");
-    
-    printf("Testing printf: Hello %s! Number: %d, Hex: 0x%x, Char: %c\n", "World", -42, 3735928559, 'A');
-    printk("This is a printk message.\n");
+  
+  printf("Testing printf: Hello %s! Char: [%c] Number: %d, Hex: 0x%x , %d %d\n", "World" , 'a', -42, 3735928559, 3245, 25);
+  printk("This is a printk message.\n");
+  
+  signal_register(1, my_keyboard_callback);
 
-  while (true) {
-    keyboard_poll();
+  while (1) {
+    signal_process();
+    __asm__ volatile ("hlt");
   }
 }
